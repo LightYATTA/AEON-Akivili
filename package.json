@@ -30,6 +30,7 @@
     "node-cron": "^3.0.3",
     "sharp": "^0.33.5",
     "sharp-apng": "^0.1.5",
+    "sharp-watermark": "^0.5.3",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "ulid": "^2.3.0"

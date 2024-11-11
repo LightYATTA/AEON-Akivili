@@ -26,6 +26,7 @@ import { isConductor, isDev, isNavigator, networkChannelPingNotificationEmbedBui
 import isApng from "is-apng";
 import * as apng from 'sharp-apng';
 import * as sharp from 'sharp';
+import { addTextWatermark } from "sharp-watermark";
 import { InteractionData } from '../types/meassage-created';
 
 
@@ -107,9 +108,11 @@ const convertStickersAndImagesToFiles = async (interaction: Message<boolean>): P
         let attachment;
         if (isApng(Buffer.from(stickerBuffer.data, 'utf-8'))) {
             const image = await apng.sharpFromApng(Buffer.from(stickerBuffer.data, 'utf-8'), { transparent: true, format: "rgba4444" });
-            attachment = new AttachmentBuilder(await (image as sharp.Sharp).toBuffer(), { name: `${interactionSticker.name}.gif` });
+            const watermarkedImage = await addTextWatermark(image, interactionSticker.guild.name)
+            attachment = new AttachmentBuilder(await (watermarkedImage as sharp.Sharp).toBuffer(), { name: `${interactionSticker.name}.gif` });
         } else {
-            attachment = new AttachmentBuilder(Buffer.from(stickerBuffer.data), { name: `${interactionSticker.name}.png` });
+            const watermarkedImage = await addTextWatermark(Buffer.from(stickerBuffer.data), interactionSticker.guild.name)
+            attachment = new AttachmentBuilder((watermarkedImage as sharp.Sharp).tobuffer(), { name: `${interactionSticker.name}.png` });
         }
         return attachment;
     }))).reduce<AttachmentBuilder[]>((acc, item) => {
