@@ -112,7 +112,7 @@ const convertStickersAndImagesToFiles = async (interaction: Message<boolean>): P
             attachment = new AttachmentBuilder(await (watermarkedImage as sharp.Sharp).toBuffer(), { name: `${interactionSticker.name}.gif` });
         } else {
             const watermarkedImage = await addTextWatermark(Buffer.from(stickerBuffer.data), interactionSticker.guild.name)
-            attachment = new AttachmentBuilder((watermarkedImage as sharp.Sharp).tobuffer(), { name: `${interactionSticker.name}.png` });
+            attachment = new AttachmentBuilder(await (watermarkedImage as sharp.Sharp).tobuffer(), { name: `${interactionSticker.name}.png` });
         }
         return attachment;
     }))).reduce<AttachmentBuilder[]>((acc, item) => {
