@@ -107,12 +107,22 @@ const convertStickersAndImagesToFiles = async (interaction: Message<boolean>): P
         const stickerBuffer = await axios.get(interactionSticker.url, { responseType: 'arraybuffer' });
         let attachment;
         if (isApng(Buffer.from(stickerBuffer.data, 'utf-8'))) {
+           let watermarkedImage;
             const image = await apng.sharpFromApng(Buffer.from(stickerBuffer.data, 'utf-8'), { transparent: true, format: "rgba4444" });
-            const watermarkedImage = await addTextWatermark(image, interactionSticker.guild.name)
+           if (interactionSticker.guild !== null) {
+                   watermarkedImage = await addTextWatermark(await (image as sharp.Sharp).toBuffer(), interactionSticker.guild.name)
+            } else {
+                   watermarkedImage = await addTextWatermark(await (image as sharp.Sharp).toBuffer(), 'A.E.O.N. ⟡ Towards the Stars')
+            }
             attachment = new AttachmentBuilder(await (watermarkedImage as sharp.Sharp).toBuffer(), { name: `${interactionSticker.name}.gif` });
         } else {
-            const watermarkedImage = await addTextWatermark(Buffer.from(stickerBuffer.data), interactionSticker.guild.name)
-            attachment = new AttachmentBuilder(await (watermarkedImage as sharp.Sharp).tobuffer(), { name: `${interactionSticker.name}.png` });
+            let watermarkedImage
+           if (interactionSticker.guild !== null) {
+                    watermarkedImage = await addTextWatermark(Buffer.from(stickerBuffer.data, 'utf-8'), interactionSticker.guild.name)
+            } else {
+                    watermarkedImage = await addTextWatermark(Buffer.from(stickerBuffer.data, 'utf-8'), 'A.E.O.N. ⟡ Towards the Stars')
+            }
+            attachment = new AttachmentBuilder(await (watermarkedImage as sharp.Sharp).toBuffer(), { name: `${interactionSticker.name}.png` });
         }
         return attachment;
     }))).reduce<AttachmentBuilder[]>((acc, item) => {
