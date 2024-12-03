@@ -26,7 +26,7 @@
     "glob": "^8.0.3",
     "glob-promise": "^6.0.3",
     "is-apng": "^1.2.0",
-    "mongoose": "^7.5.2",
+    "mongoose": "^8.8.3",
     "node-cron": "^3.0.3",
     "sharp": "^0.33.5",
     "sharp-apng": "^0.1.5",
